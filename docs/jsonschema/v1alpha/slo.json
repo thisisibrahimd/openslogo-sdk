@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openslo.com/schemas/v1alpha/slo.json",
+  "$anchor": "SLO",
+  "$defs": {
+    "Metadata": {
+      "$anchor": "Metadata",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ]
+    },
+    "SLOCalendar": {
+      "$anchor": "SLOCalendar",
+      "properties": {
+        "startTime": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "startTime",
+        "timeZone"
+      ]
+    },
+    "SLOIndicator": {
+      "$anchor": "SLOIndicator",
+      "properties": {
+        "thresholdMetric": {
+          "$ref": "#/$defs/SLOMetricSourceSpec"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "thresholdMetric"
+      ]
+    },
+    "SLOMetricSourceSpec": {
+      "$anchor": "SLOMetricSourceSpec",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "queryType": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "source",
+        "queryType",
+        "query"
+      ]
+    },
+    "SLOObjective": {
+      "$anchor": "SLOObjective",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "ratioMetrics": {
+          "$ref": "#/$defs/SLORatioMetrics"
+        },
+        "target": {
+          "type": "number"
+        },
+        "timeSliceTarget": {
+          "type": "number"
+        },
+        "op": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "displayName",
+        "value",
+        "ratioMetrics",
+        "target"
+      ]
+    },
+    "SLORatioMetrics": {
+      "$anchor": "SLORatioMetrics",
+      "properties": {
+        "good": {
+          "$ref": "#/$defs/SLOMetricSourceSpec"
+        },
+        "total": {
+          "$ref": "#/$defs/SLOMetricSourceSpec"
+        },
+        "incremental": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "good",
+        "total",
+        "incremental"
+      ]
+    },
+    "SLOSpec": {
+      "$anchor": "SLOSpec",
+      "properties": {
+        "timeWindows": {
+          "items": {
+            "$ref": "#/$defs/SLOTimeWindow"
+          },
+          "type": "array"
+        },
+        "budgetingMethod": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "indicator": {
+          "$ref": "#/$defs/SLOIndicator"
+        },
+        "service": {
+          "type": "string"
+        },
+        "objectives": {
+          "items": {
+            "$ref": "#/$defs/SLOObjective"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "timeWindows",
+        "budgetingMethod",
+        "indicator",
+        "service",
+        "objectives"
+      ]
+    },
+    "SLOTimeWindow": {
+      "$anchor": "SLOTimeWindow",
+      "properties": {
+        "unit": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        },
+        "isRolling": {
+          "type": "boolean"
+        },
+        "calendar": {
+          "$ref": "#/$defs/SLOCalendar"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "unit",
+        "count",
+        "isRolling"
+      ]
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/SLOSpec"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ]
+}

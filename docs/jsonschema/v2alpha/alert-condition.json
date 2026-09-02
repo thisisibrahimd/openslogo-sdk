@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openslo.com/schemas/v2alpha/alert-condition.json",
+  "$anchor": "AlertCondition",
+  "$defs": {
+    "AlertConditionSpec": {
+      "$anchor": "AlertConditionSpec",
+      "properties": {
+        "severity": {
+          "type": "string"
+        },
+        "condition": {
+          "$ref": "#/$defs/AlertConditionType"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "severity",
+        "condition"
+      ]
+    },
+    "AlertConditionType": {
+      "$anchor": "AlertConditionType",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "lookbackWindow": {
+          "$ref": "#/$defs/DurationShorthand"
+        },
+        "alertAfter": {
+          "$ref": "#/$defs/DurationShorthand"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "kind",
+        "op",
+        "threshold",
+        "lookbackWindow",
+        "alertAfter"
+      ]
+    },
+    "Annotations": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "DurationShorthand": {
+      "type": "string",
+      "pattern": "^[0-9]+[mhdwMQY]$",
+      "description": "A shorthand representation of time duration, e.g. '1m', '10d', '2w'."
+    },
+    "Labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "Metadata": {
+      "$anchor": "Metadata",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/Labels"
+        },
+        "annotations": {
+          "$ref": "#/$defs/Annotations"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/AlertConditionSpec"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ]
+}

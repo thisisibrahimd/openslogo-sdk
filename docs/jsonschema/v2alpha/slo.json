@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openslo.com/schemas/v2alpha/slo.json",
+  "$anchor": "SLO",
+  "$defs": {
+    "Annotations": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "DataSourceSpec": {
+      "$anchor": "DataSourceSpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "connectionDetails": true
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "type",
+        "connectionDetails"
+      ]
+    },
+    "DurationShorthand": {
+      "type": "string",
+      "pattern": "^[0-9]+[mhdwMQY]$",
+      "description": "A shorthand representation of time duration, e.g. '1m', '10d', '2w'."
+    },
+    "Labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "Metadata": {
+      "$anchor": "Metadata",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/Labels"
+        },
+        "annotations": {
+          "$ref": "#/$defs/Annotations"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ]
+    },
+    "SLIMetricSpec": {
+      "$anchor": "SLIMetricSpec",
+      "properties": {
+        "dataSourceRef": {
+          "type": "string"
+        },
+        "dataSourceSpec": {
+          "$ref": "#/$defs/DataSourceSpec"
+        },
+        "spec": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SLIRatioMetric": {
+      "$anchor": "SLIRatioMetric",
+      "properties": {
+        "counter": {
+          "type": "boolean"
+        },
+        "good": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "bad": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "total": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "rawType": {
+          "type": "string"
+        },
+        "raw": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "counter"
+      ]
+    },
+    "SLISpec": {
+      "$anchor": "SLISpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "thresholdMetric": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "ratioMetric": {
+          "$ref": "#/$defs/SLIRatioMetric"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SLOAlertPolicy": {
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "metadata": {
+              "$ref": "#/$defs/Metadata"
+            },
+            "spec": {
+              "$ref": "#/$defs/AlertPolicySpec"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "kind",
+            "metadata",
+            "spec"
+          ]
+        },
+        {
+          "properties": {
+            "alertPolicyRef": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "alertPolicyRef"
+          ]
+        }
+      ],
+      "description": "An alert policy that can be provided inline or as a reference."
+    },
+    "SLOCalendar": {
+      "$anchor": "SLOCalendar",
+      "properties": {
+        "startTime": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "startTime",
+        "timeZone"
+      ]
+    },
+    "SLOObjective": {
+      "$anchor": "SLOObjective",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "target": {
+          "type": "number"
+        },
+        "targetPercent": {
+          "type": "number"
+        },
+        "timeSliceTarget": {
+          "type": "number"
+        },
+        "timeSliceWindow": {
+          "$ref": "#/$defs/DurationShorthand"
+        },
+        "sli": {
+          "$ref": "#/$defs/SLOSLIInline"
+        },
+        "sliRef": {
+          "type": "string"
+        },
+        "compositeWeight": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SLOSLIInline": {
+      "$anchor": "SLOSLIInline",
+      "properties": {
+        "metadata": {
+          "$ref": "#/$defs/Metadata"
+        },
+        "spec": {
+          "$ref": "#/$defs/SLISpec"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "metadata",
+        "spec"
+      ]
+    },
+    "SLOSpec": {
+      "$anchor": "SLOSpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "serviceRef": {
+          "type": "string"
+        },
+        "sli": {
+          "$ref": "#/$defs/SLOSLIInline"
+        },
+        "sliRef": {
+          "type": "string"
+        },
+        "budgetingMethod": {
+          "type": "string"
+        },
+        "timeWindow": {
+          "items": {
+            "$ref": "#/$defs/SLOTimeWindow"
+          },
+          "type": "array"
+        },
+        "objectives": {
+          "items": {
+            "$ref": "#/$defs/SLOObjective"
+          },
+          "type": "array"
+        },
+        "alertPolicies": {
+          "items": {
+            "$ref": "#/$defs/SLOAlertPolicy"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "serviceRef",
+        "budgetingMethod",
+        "objectives"
+      ]
+    },
+    "SLOTimeWindow": {
+      "$anchor": "SLOTimeWindow",
+      "properties": {
+        "duration": {
+          "$ref": "#/$defs/DurationShorthand"
+        },
+        "isRolling": {
+          "type": "boolean"
+        },
+        "calendar": {
+          "$ref": "#/$defs/SLOCalendar"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "duration",
+        "isRolling"
+      ]
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/SLOSpec"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ]
+}

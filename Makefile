@@ -73,9 +73,9 @@ check/vulns:
 	$(call _print_step,Running govulncheck)
 	$(GO_ENV) govulncheck $(GO_PACKAGES)
 
-.PHONY: generate generate/go generate/govydoc
+.PHONY: generate generate/go generate/govydoc generate/jsonschema
 ## Auto generate files.
-generate: generate/go generate/govydoc
+generate: generate/go generate/govydoc generate/jsonschema
 
 ## Generate Golang code.
 generate/go:
@@ -86,6 +86,11 @@ generate/go:
 generate/govydoc:
 	$(call _print_step,Generating object docs)
 	$(GO_ENV) go run ./internal/cmd/objectdoc/main.go > ./docs/manifest.json
+
+## Generate JSON Schema files for all OpenSLO objects.
+generate/jsonschema:
+	$(call _print_step,Generating JSON Schema files)
+	$(GO_ENV) go run ./internal/cmd/jsonschema/main.go ./docs/jsonschema
 
 .PHONY: format format/go
 ## Format files.

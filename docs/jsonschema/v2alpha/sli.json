@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openslo.com/schemas/v2alpha/sli.json",
+  "$anchor": "SLI",
+  "$defs": {
+    "Annotations": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "DataSourceSpec": {
+      "$anchor": "DataSourceSpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "connectionDetails": true
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "type",
+        "connectionDetails"
+      ]
+    },
+    "Labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "Metadata": {
+      "$anchor": "Metadata",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/Labels"
+        },
+        "annotations": {
+          "$ref": "#/$defs/Annotations"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ]
+    },
+    "SLIMetricSpec": {
+      "$anchor": "SLIMetricSpec",
+      "properties": {
+        "dataSourceRef": {
+          "type": "string"
+        },
+        "dataSourceSpec": {
+          "$ref": "#/$defs/DataSourceSpec"
+        },
+        "spec": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SLIRatioMetric": {
+      "$anchor": "SLIRatioMetric",
+      "properties": {
+        "counter": {
+          "type": "boolean"
+        },
+        "good": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "bad": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "total": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "rawType": {
+          "type": "string"
+        },
+        "raw": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "counter"
+      ]
+    },
+    "SLISpec": {
+      "$anchor": "SLISpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "thresholdMetric": {
+          "$ref": "#/$defs/SLIMetricSpec"
+        },
+        "ratioMetric": {
+          "$ref": "#/$defs/SLIRatioMetric"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/SLISpec"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ]
+}

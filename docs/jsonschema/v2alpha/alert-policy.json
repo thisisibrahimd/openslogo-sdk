@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openslo.com/schemas/v2alpha/alert-policy.json",
+  "$anchor": "AlertPolicy",
+  "$defs": {
+    "AlertPolicyCondition": {
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "metadata": {
+              "$ref": "#/$defs/Metadata"
+            },
+            "spec": {
+              "$ref": "#/$defs/AlertConditionSpec"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "kind",
+            "metadata",
+            "spec"
+          ]
+        },
+        {
+          "properties": {
+            "conditionRef": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "conditionRef"
+          ]
+        }
+      ],
+      "description": "An alert condition that can be provided inline or as a reference."
+    },
+    "AlertPolicyNotificationTarget": {
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "type": "string"
+            },
+            "metadata": {
+              "$ref": "#/$defs/Metadata"
+            },
+            "spec": {
+              "$ref": "#/$defs/AlertNotificationTargetSpec"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "kind",
+            "metadata",
+            "spec"
+          ]
+        },
+        {
+          "properties": {
+            "targetRef": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "targetRef"
+          ]
+        }
+      ],
+      "description": "A notification target that can be provided inline or as a reference."
+    },
+    "AlertPolicySpec": {
+      "$anchor": "AlertPolicySpec",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "alertWhenNoData": {
+          "type": "boolean"
+        },
+        "alertWhenBreaching": {
+          "type": "boolean"
+        },
+        "alertWhenResolved": {
+          "type": "boolean"
+        },
+        "conditions": {
+          "items": {
+            "$ref": "#/$defs/AlertPolicyCondition"
+          },
+          "type": "array"
+        },
+        "notificationTargets": {
+          "items": {
+            "$ref": "#/$defs/AlertPolicyNotificationTarget"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "Annotations": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "Labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "Metadata": {
+      "$anchor": "Metadata",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "labels": {
+          "$ref": "#/$defs/Labels"
+        },
+        "annotations": {
+          "$ref": "#/$defs/Annotations"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "name"
+      ]
+    }
+  },
+  "properties": {
+    "apiVersion": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "spec": {
+      "$ref": "#/$defs/AlertPolicySpec"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ]
+}
