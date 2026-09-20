@@ -7,27 +7,32 @@
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name is the object identifier used by references."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is a human-readable name."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies an OpenSLO v1alpha object."
     },
     "ServiceSpec": {
       "$anchor": "ServiceSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the service."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "ServiceSpec contains the descriptive properties of a Service."
     }
   },
   "properties": {
@@ -51,5 +56,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "Service is the legacy v1alpha Service representation supported by this SDK."
 }

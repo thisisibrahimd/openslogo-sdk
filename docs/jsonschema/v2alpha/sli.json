@@ -7,110 +7,136 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps annotation keys to arbitrary string values."
     },
     "DataSourceSpec": {
       "$anchor": "DataSourceSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the data source."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "Type identifies the metric-source type, such as Prometheus or Datadog.\nThe consuming implementation defines the accepted values."
         },
-        "connectionDetails": true
+        "connectionDetails": {
+          "description": "ConnectionDetails contains implementation-defined connection data encoded as JSON,\nsuch as endpoints or authentication settings."
+        }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "type",
         "connectionDetails"
-      ]
+      ],
+      "description": "DataSourceSpec defines a metric-source type and its implementation-defined connection data."
     },
     "Labels": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps label keys to one string value each."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object when other OpenSLO objects refer to it."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels classifies the object with Kubernetes-style, single-valued labels."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations attaches non-identifying metadata to the object."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata is the Kubernetes-style identifying metadata used by v2alpha objects."
     },
     "SLIMetricSpec": {
       "$anchor": "SLIMetricSpec",
       "properties": {
         "dataSourceRef": {
-          "type": "string"
+          "type": "string",
+          "description": "DataSourceRef names an existing [DataSource]."
         },
         "dataSourceSpec": {
-          "$ref": "#/$defs/DataSourceSpec"
+          "$ref": "#/$defs/DataSourceSpec",
+          "description": "DataSourceSpec embeds the complete data-source connection configuration."
         },
         "spec": {
-          "type": "object"
+          "type": "object",
+          "description": "Spec contains implementation-defined query configuration at the same level as the data-source selection."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLIMetricSpec supplies an implementation-defined query in the v2alpha flattened layout."
     },
     "SLIRatioMetric": {
       "$anchor": "SLIRatioMetric",
       "properties": {
         "counter": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Counter reports whether the good, bad, and total metrics are monotonically increasing counters.\nIt has no effect when Raw is used."
         },
         "good": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Good is the success-count numerator used with Total."
         },
         "bad": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Bad is the failure-count input used with Total to derive successes."
         },
         "total": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Total is the denominator paired with Good or Bad."
         },
         "rawType": {
-          "type": "string"
+          "type": "string",
+          "description": "RawType identifies whether Raw contains a success or failure ratio when Raw is used."
         },
         "raw": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Raw supplies an already computed ratio."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "counter"
-      ]
+      ],
+      "description": "SLIRatioMetric defines an indicator as SLIRatioMetric.Good divided by SLIRatioMetric.Total, (SLIRatioMetric.Total minus SLIRatioMetric.Bad) divided by SLIRatioMetric.Total, or SLIRatioMetric.Raw."
     },
     "SLISpec": {
       "$anchor": "SLISpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the indicator."
         },
         "thresholdMetric": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "ThresholdMetric defines a query that returns raw values.\n[SLOObjective.Operator] compares each value with [SLOObjective.Value]."
         },
         "ratioMetric": {
-          "$ref": "#/$defs/SLIRatioMetric"
+          "$ref": "#/$defs/SLIRatioMetric",
+          "description": "RatioMetric defines component queries or a precomputed ratio for an SLO objective."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLISpec defines the query or queries used to calculate an SLI."
     }
   },
   "properties": {
@@ -134,5 +160,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "SLI defines a derived reliability indicator calculated from one or more metric queries against data sources."
 }

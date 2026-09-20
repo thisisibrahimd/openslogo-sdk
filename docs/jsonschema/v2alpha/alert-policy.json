@@ -81,63 +81,76 @@
       "$anchor": "AlertPolicySpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the alert policy."
         },
         "alertWhenNoData": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "AlertWhenNoData controls whether a missing burn-rate value triggers an alert."
         },
         "alertWhenBreaching": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "AlertWhenBreaching controls whether a breaching condition triggers an alert."
         },
         "alertWhenResolved": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "AlertWhenResolved controls whether a resolved condition triggers an alert."
         },
         "conditions": {
           "items": {
             "$ref": "#/$defs/AlertPolicyCondition"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Conditions contains alert conditions specified inline or by reference."
         },
         "notificationTargets": {
           "items": {
             "$ref": "#/$defs/AlertPolicyNotificationTarget"
           },
-          "type": "array"
+          "type": "array",
+          "description": "NotificationTargets contains delivery destinations.\nSpecify each destination inline or by reference."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "AlertPolicySpec defines the trigger states, condition, and notification destinations for an AlertPolicy."
     },
     "Annotations": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps annotation keys to arbitrary string values."
     },
     "Labels": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps label keys to one string value each."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object when other OpenSLO objects refer to it."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels classifies the object with Kubernetes-style, single-valued labels."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations attaches non-identifying metadata to the object."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata is the Kubernetes-style identifying metadata used by v2alpha objects."
     }
   },
   "properties": {
@@ -161,5 +174,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "AlertPolicy defines which alert-condition states trigger an SLO alert."
 }

@@ -7,7 +7,8 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps metadata keys to implementation- or system-specific values."
     },
     "Label": {
       "oneOf": [
@@ -27,39 +28,47 @@
       "additionalProperties": {
         "$ref": "#/$defs/Label"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps each metadata key to a set of values."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is the object's human-readable name."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels contains metadata associated with the object."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations contains implementation- or system-specific metadata."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies and describes an OpenSLO v1 object."
     },
     "ServiceSpec": {
       "$anchor": "ServiceSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the service."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "ServiceSpec contains the descriptive properties of a Service."
     }
   },
   "properties": {
@@ -83,5 +92,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "Service identifies a high-level group of SLO objects."
 }

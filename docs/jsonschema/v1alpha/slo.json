@@ -7,26 +7,31 @@
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name is the object identifier used by references."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is a human-readable name."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies an OpenSLO v1alpha object."
     },
     "SLOCalendar": {
       "$anchor": "SLOCalendar",
       "properties": {
         "startTime": {
-          "type": "string"
+          "type": "string",
+          "description": "StartTime anchors the first calendar window."
         },
         "timeZone": {
-          "type": "string"
+          "type": "string",
+          "description": "TimeZone controls the interpretation of StartTime and later boundaries."
         }
       },
       "additionalProperties": false,
@@ -34,32 +39,38 @@
       "required": [
         "startTime",
         "timeZone"
-      ]
+      ],
+      "description": "SLOCalendar anchors a calendar-aligned SLOTimeWindow."
     },
     "SLOIndicator": {
       "$anchor": "SLOIndicator",
       "properties": {
         "thresholdMetric": {
-          "$ref": "#/$defs/SLOMetricSourceSpec"
+          "$ref": "#/$defs/SLOMetricSourceSpec",
+          "description": "ThresholdMetric retrieves raw metric values.\nEach objective compares them with its [Operator] and Value."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "thresholdMetric"
-      ]
+      ],
+      "description": "SLOIndicator defines the threshold-metric form of a v1alpha service level indicator."
     },
     "SLOMetricSourceSpec": {
       "$anchor": "SLOMetricSourceSpec",
       "properties": {
         "source": {
-          "type": "string"
+          "type": "string",
+          "description": "Source identifies the metric data source."
         },
         "queryType": {
-          "type": "string"
+          "type": "string",
+          "description": "QueryType identifies the query language or query form."
         },
         "query": {
-          "type": "string"
+          "type": "string",
+          "description": "Query is the provider-specific expression that retrieves the metric."
         }
       },
       "additionalProperties": false,
@@ -68,50 +79,60 @@
         "source",
         "queryType",
         "query"
-      ]
+      ],
+      "description": "SLOMetricSourceSpec describes a provider-specific metric query."
     },
     "SLOObjective": {
       "$anchor": "SLOObjective",
       "properties": {
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is a human-readable objective name."
         },
         "value": {
-          "type": "number"
+          "type": "number",
+          "description": "Value is the metric threshold used by [Operator]."
         },
         "ratioMetrics": {
-          "$ref": "#/$defs/SLORatioMetrics"
+          "$ref": "#/$defs/SLORatioMetrics",
+          "description": "RatioMetrics supplies a good-events-to-total-events indicator."
         },
         "target": {
-          "type": "number"
+          "type": "number",
+          "description": "BudgetTarget is the desired fraction of good events or time slices."
         },
         "timeSliceTarget": {
-          "type": "number"
+          "type": "number",
+          "description": "TimeSliceTarget is the minimum success ratio that makes a time slice good.\nIt is used by the Timeslices budgeting method."
         },
         "op": {
-          "type": "string"
+          "type": "string",
+          "description": "Operator compares values returned by the threshold metric with Value."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "displayName",
-        "value",
         "ratioMetrics",
         "target"
-      ]
+      ],
+      "description": "SLOObjective defines a reliability target and, for the ratio form, its metric queries."
     },
     "SLORatioMetrics": {
       "$anchor": "SLORatioMetrics",
       "properties": {
         "good": {
-          "$ref": "#/$defs/SLOMetricSourceSpec"
+          "$ref": "#/$defs/SLOMetricSourceSpec",
+          "description": "Good retrieves the numerator: events considered successful."
         },
         "total": {
-          "$ref": "#/$defs/SLOMetricSourceSpec"
+          "$ref": "#/$defs/SLOMetricSourceSpec",
+          "description": "Total retrieves the denominator: all considered events."
         },
         "incremental": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Incremental reports whether the queried metrics are monotonically increasing counters\nrather than values that can rise or fall."
         }
       },
       "additionalProperties": false,
@@ -120,7 +141,8 @@
         "good",
         "total",
         "incremental"
-      ]
+      ],
+      "description": "SLORatioMetrics defines an indicator as the ratio of good events to total events."
     },
     "SLOSpec": {
       "$anchor": "SLOSpec",
@@ -129,25 +151,31 @@
           "items": {
             "$ref": "#/$defs/SLOTimeWindow"
           },
-          "type": "array"
+          "type": "array",
+          "description": "TimeWindows defines the period over which the SLO is evaluated."
         },
         "budgetingMethod": {
-          "type": "string"
+          "type": "string",
+          "description": "BudgetingMethod applies the selected error-budget calculation to every objective."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the SLO."
         },
         "indicator": {
-          "$ref": "#/$defs/SLOIndicator"
+          "$ref": "#/$defs/SLOIndicator",
+          "description": "Indicator defines the threshold-metric form of the SLO."
         },
         "service": {
-          "type": "string"
+          "type": "string",
+          "description": "Service is the metadata name of the [Service] whose reliability the SLO measures."
         },
         "objectives": {
           "items": {
             "$ref": "#/$defs/SLOObjective"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Objectives contains reliability targets.\nFor the ratio form, each objective's [SLOObjective.RatioMetrics] defines the SLI metric queries."
         }
       },
       "additionalProperties": false,
@@ -158,22 +186,27 @@
         "indicator",
         "service",
         "objectives"
-      ]
+      ],
+      "description": "SLOSpec defines the service, indicator, objectives, time window, and error-budget calculation for an SLO."
     },
     "SLOTimeWindow": {
       "$anchor": "SLOTimeWindow",
       "properties": {
         "unit": {
-          "type": "string"
+          "type": "string",
+          "description": "Unit combines with Count to set the window length."
         },
         "count": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Count sets how many Units form the window."
         },
         "isRolling": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "IsRolling selects a continuously advancing window when true and a calendar-aligned window when false."
         },
         "calendar": {
-          "$ref": "#/$defs/SLOCalendar"
+          "$ref": "#/$defs/SLOCalendar",
+          "description": "Calendar defines the alignment of a calendar window."
         }
       },
       "additionalProperties": false,
@@ -182,7 +215,8 @@
         "unit",
         "count",
         "isRolling"
-      ]
+      ],
+      "description": "SLOTimeWindow defines the period over which an SLO is evaluated."
     }
   },
   "properties": {
@@ -206,5 +240,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "SLO is the legacy v1alpha SLO representation supported by this SDK."
 }

@@ -7,13 +7,16 @@
       "$anchor": "AlertConditionSpec",
       "properties": {
         "severity": {
-          "type": "string"
+          "type": "string",
+          "description": "Severity is an implementation-defined classification such as \"sev1\" or \"page\"."
         },
         "condition": {
-          "$ref": "#/$defs/AlertConditionType"
+          "$ref": "#/$defs/AlertConditionType",
+          "description": "Condition defines the burn-rate comparison used to determine whether this alert condition is breaching."
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the alert condition."
         }
       },
       "additionalProperties": false,
@@ -21,25 +24,31 @@
       "required": [
         "severity",
         "condition"
-      ]
+      ],
+      "description": "AlertConditionSpec defines an alert's severity and burn-rate condition."
     },
     "AlertConditionType": {
       "$anchor": "AlertConditionType",
       "properties": {
         "kind": {
-          "type": "string"
+          "type": "string",
+          "description": "Kind selects the condition calculation.\nOpenSLO defaults Kind to [AlertConditionKindBurnRate].\nThis SDK does not apply that default."
         },
         "op": {
-          "type": "string"
+          "type": "string",
+          "description": "Operator compares the calculated burn rate with Threshold."
         },
         "threshold": {
-          "type": "number"
+          "type": "number",
+          "description": "Threshold sets the numeric burn-rate boundary."
         },
         "lookbackWindow": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "LookbackWindow sets the period for burn-rate calculation."
         },
         "alertAfter": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "AlertAfter sets how long the burn-rate comparison must remain true before the condition becomes breaching.\nAn [AlertPolicy] controls whether that state triggers an alert.\nOpenSLO treats an omitted value as \"0m\".\nThis SDK leaves it unset."
         }
       },
       "additionalProperties": false,
@@ -49,13 +58,15 @@
         "op",
         "threshold",
         "lookbackWindow"
-      ]
+      ],
+      "description": "AlertConditionType defines a comparison against an SLO's burn rate."
     },
     "Annotations": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps metadata keys to implementation- or system-specific values."
     },
     "DurationShorthand": {
       "type": "string",
@@ -80,29 +91,35 @@
       "additionalProperties": {
         "$ref": "#/$defs/Label"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps each metadata key to a set of values."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is the object's human-readable name."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels contains metadata associated with the object."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations contains implementation- or system-specific metadata."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies and describes an OpenSLO v1 object."
     }
   },
   "properties": {
@@ -126,5 +143,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "AlertCondition defines a burn-rate condition for an SLO."
 }

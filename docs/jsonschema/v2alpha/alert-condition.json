@@ -7,13 +7,15 @@
       "$anchor": "AlertConditionSpec",
       "properties": {
         "severity": {
-          "type": "string"
+          "type": "string",
+          "description": "Severity is a consumer-defined alert classification."
         },
         "condition": {
           "$ref": "#/$defs/AlertConditionType"
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the alert condition."
         }
       },
       "additionalProperties": false,
@@ -21,25 +23,31 @@
       "required": [
         "severity",
         "condition"
-      ]
+      ],
+      "description": "AlertConditionSpec defines an alert's severity and breach condition."
     },
     "AlertConditionType": {
       "$anchor": "AlertConditionType",
       "properties": {
         "kind": {
-          "type": "string"
+          "type": "string",
+          "description": "Kind selects the condition algorithm."
         },
         "op": {
-          "type": "string"
+          "type": "string",
+          "description": "Operator compares the calculated burn rate with Threshold."
         },
         "threshold": {
-          "type": "number"
+          "type": "number",
+          "description": "Threshold sets the numeric burn-rate boundary."
         },
         "lookbackWindow": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "LookbackWindow sets the period for burn-rate calculation."
         },
         "alertAfter": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "AlertAfter sets how long the burn-rate comparison must remain true before the condition becomes breaching."
         }
       },
       "additionalProperties": false,
@@ -50,13 +58,15 @@
         "threshold",
         "lookbackWindow",
         "alertAfter"
-      ]
+      ],
+      "description": "AlertConditionType defines a burn-rate comparison over a lookback window."
     },
     "Annotations": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps annotation keys to arbitrary string values."
     },
     "DurationShorthand": {
       "type": "string",
@@ -67,26 +77,31 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps label keys to one string value each."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object when other OpenSLO objects refer to it."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels classifies the object with Kubernetes-style, single-valued labels."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations attaches non-identifying metadata to the object."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata is the Kubernetes-style identifying metadata used by v2alpha objects."
     }
   },
   "properties": {
@@ -110,5 +125,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "AlertCondition defines when an SLO alert condition is breaching."
 }

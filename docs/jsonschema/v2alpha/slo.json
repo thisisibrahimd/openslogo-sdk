@@ -7,25 +7,31 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps annotation keys to arbitrary string values."
     },
     "DataSourceSpec": {
       "$anchor": "DataSourceSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the data source."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "Type identifies the metric-source type, such as Prometheus or Datadog.\nThe consuming implementation defines the accepted values."
         },
-        "connectionDetails": true
+        "connectionDetails": {
+          "description": "ConnectionDetails contains implementation-defined connection data encoded as JSON,\nsuch as endpoints or authentication settings."
+        }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "type",
         "connectionDetails"
-      ]
+      ],
+      "description": "DataSourceSpec defines a metric-source type and its implementation-defined connection data."
     },
     "DurationShorthand": {
       "type": "string",
@@ -36,86 +42,106 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps label keys to one string value each."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object when other OpenSLO objects refer to it."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels classifies the object with Kubernetes-style, single-valued labels."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations attaches non-identifying metadata to the object."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata is the Kubernetes-style identifying metadata used by v2alpha objects."
     },
     "SLIMetricSpec": {
       "$anchor": "SLIMetricSpec",
       "properties": {
         "dataSourceRef": {
-          "type": "string"
+          "type": "string",
+          "description": "DataSourceRef names an existing [DataSource]."
         },
         "dataSourceSpec": {
-          "$ref": "#/$defs/DataSourceSpec"
+          "$ref": "#/$defs/DataSourceSpec",
+          "description": "DataSourceSpec embeds the complete data-source connection configuration."
         },
         "spec": {
-          "type": "object"
+          "type": "object",
+          "description": "Spec contains implementation-defined query configuration at the same level as the data-source selection."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLIMetricSpec supplies an implementation-defined query in the v2alpha flattened layout."
     },
     "SLIRatioMetric": {
       "$anchor": "SLIRatioMetric",
       "properties": {
         "counter": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Counter reports whether the good, bad, and total metrics are monotonically increasing counters.\nIt has no effect when Raw is used."
         },
         "good": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Good is the success-count numerator used with Total."
         },
         "bad": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Bad is the failure-count input used with Total to derive successes."
         },
         "total": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Total is the denominator paired with Good or Bad."
         },
         "rawType": {
-          "type": "string"
+          "type": "string",
+          "description": "RawType identifies whether Raw contains a success or failure ratio when Raw is used."
         },
         "raw": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Raw supplies an already computed ratio."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "counter"
-      ]
+      ],
+      "description": "SLIRatioMetric defines an indicator as SLIRatioMetric.Good divided by SLIRatioMetric.Total, (SLIRatioMetric.Total minus SLIRatioMetric.Bad) divided by SLIRatioMetric.Total, or SLIRatioMetric.Raw."
     },
     "SLISpec": {
       "$anchor": "SLISpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the indicator."
         },
         "thresholdMetric": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "ThresholdMetric defines a query that returns raw values.\n[SLOObjective.Operator] compares each value with [SLOObjective.Value]."
         },
         "ratioMetric": {
-          "$ref": "#/$defs/SLIRatioMetric"
+          "$ref": "#/$defs/SLIRatioMetric",
+          "description": "RatioMetric defines component queries or a precomputed ratio for an SLO objective."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLISpec defines the query or queries used to calculate an SLI."
     },
     "SLOAlertPolicy": {
       "oneOf": [
@@ -158,10 +184,12 @@
       "$anchor": "SLOCalendar",
       "properties": {
         "startTime": {
-          "type": "string"
+          "type": "string",
+          "description": "StartTime is the local date and time when calendar alignment starts."
         },
         "timeZone": {
-          "type": "string"
+          "type": "string",
+          "description": "TimeZone determines how StartTime maps to an instant."
         }
       },
       "additionalProperties": false,
@@ -169,44 +197,56 @@
       "required": [
         "startTime",
         "timeZone"
-      ]
+      ],
+      "description": "SLOCalendar defines the starting wall-clock time and time zone for a calendar-aligned SLOTimeWindow."
     },
     "SLOObjective": {
       "$anchor": "SLOObjective",
       "properties": {
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is a human-readable name for this objective.\nIt is not part of the enclosing object's [Metadata]."
         },
         "op": {
-          "type": "string"
+          "type": "string",
+          "description": "Operator compares a threshold metric with Value."
         },
         "value": {
-          "type": "number"
+          "type": "number",
+          "description": "Value is the comparison threshold for a threshold metric."
         },
         "target": {
-          "type": "number"
+          "type": "number",
+          "description": "Target is the desired success proportion.\nFor example, 0.995 means 99.5 percent."
         },
         "targetPercent": {
-          "type": "number"
+          "type": "number",
+          "description": "TargetPercent is the desired success percentage."
         },
         "timeSliceTarget": {
-          "type": "number"
+          "type": "number",
+          "description": "TimeSliceTarget sets the per-slice success threshold for Timeslices."
         },
         "timeSliceWindow": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "TimeSliceWindow sets the size of each slice for Timeslices and RatioTimeslices.\nOpenSLO also accepts a number interpreted as minutes.\nThis SDK represents only duration shorthand."
         },
         "sli": {
-          "$ref": "#/$defs/SLOSLIInline"
+          "$ref": "#/$defs/SLOSLIInline",
+          "description": "SLI embeds this objective's service level indicator for a composite SLO."
         },
         "sliRef": {
-          "type": "string"
+          "type": "string",
+          "description": "SLIRef names this objective's existing [SLI] for a composite SLO."
         },
         "compositeWeight": {
-          "type": "number"
+          "type": "number",
+          "description": "CompositeWeight scales this objective's contribution to a composite SLO.\nThe living v2alpha proposal defaults it to 1, but this SDK preserves an omitted value as nil."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLOObjective defines one error-budget target and, for a threshold SLI, its metric comparison."
     },
     "SLOSLIInline": {
       "$anchor": "SLOSLIInline",
@@ -223,43 +263,52 @@
       "required": [
         "metadata",
         "spec"
-      ]
+      ],
+      "description": "SLOSLIInline embeds an SLI definition in an SLO or one of its objectives."
     },
     "SLOSpec": {
       "$anchor": "SLOSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the SLO."
         },
         "serviceRef": {
-          "type": "string"
+          "type": "string",
+          "description": "ServiceRef names the service associated with this SLO.\nThe SDK serializes the field as \"serviceRef\".\nThe living v2alpha proposal calls it \"service\"."
         },
         "sli": {
-          "$ref": "#/$defs/SLOSLIInline"
+          "$ref": "#/$defs/SLOSLIInline",
+          "description": "SLI embeds the service level indicator for a standard SLO."
         },
         "sliRef": {
-          "type": "string"
+          "type": "string",
+          "description": "SLIRef names an existing [SLI] for a standard SLO."
         },
         "budgetingMethod": {
-          "type": "string"
+          "type": "string",
+          "description": "BudgetingMethod applies the selected error-budget calculation to every objective."
         },
         "timeWindow": {
           "items": {
             "$ref": "#/$defs/SLOTimeWindow"
           },
-          "type": "array"
+          "type": "array",
+          "description": "TimeWindow defines the period over which the SLO is evaluated."
         },
         "objectives": {
           "items": {
             "$ref": "#/$defs/SLOObjective"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Objectives contains the SLO's budget targets and metric thresholds."
         },
         "alertPolicies": {
           "items": {
             "$ref": "#/$defs/SLOAlertPolicy"
           },
-          "type": "array"
+          "type": "array",
+          "description": "AlertPolicies contains inline alert policies or references to existing [AlertPolicy] objects."
         }
       },
       "additionalProperties": false,
@@ -268,19 +317,23 @@
         "serviceRef",
         "budgetingMethod",
         "objectives"
-      ]
+      ],
+      "description": "SLOSpec defines an SLO's service, SLI, time window, budgeting method, objectives, and alert policies."
     },
     "SLOTimeWindow": {
       "$anchor": "SLOTimeWindow",
       "properties": {
         "duration": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "Duration is the length of the evaluation window."
         },
         "isRolling": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "IsRolling selects a rolling window when true and a calendar-aligned window when false."
         },
         "calendar": {
-          "$ref": "#/$defs/SLOCalendar"
+          "$ref": "#/$defs/SLOCalendar",
+          "description": "Calendar defines the alignment of a calendar window."
         }
       },
       "additionalProperties": false,
@@ -288,7 +341,8 @@
       "required": [
         "duration",
         "isRolling"
-      ]
+      ],
+      "description": "SLOTimeWindow describes one rolling or calendar-aligned evaluation window."
     }
   },
   "properties": {
@@ -312,5 +366,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "SLO defines a target for an SLI over a time window."
 }

@@ -7,42 +7,50 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps annotation keys to arbitrary string values."
     },
     "Labels": {
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps label keys to one string value each."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object when other OpenSLO objects refer to it."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels classifies the object with Kubernetes-style, single-valued labels."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations attaches non-identifying metadata to the object."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata is the Kubernetes-style identifying metadata used by v2alpha objects."
     },
     "ServiceSpec": {
       "$anchor": "ServiceSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the service."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "ServiceSpec defines the descriptive attributes of a Service."
     }
   },
   "properties": {
@@ -66,5 +74,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "Service identifies a high-level group for SLOs."
 }

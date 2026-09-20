@@ -7,7 +7,8 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps metadata keys to implementation- or system-specific values."
     },
     "Label": {
       "oneOf": [
@@ -27,48 +28,58 @@
       "additionalProperties": {
         "$ref": "#/$defs/Label"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps each metadata key to a set of values."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is the object's human-readable name."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels contains metadata associated with the object."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations contains implementation- or system-specific metadata."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies and describes an OpenSLO v1 object."
     },
     "SLIMetricSource": {
       "$anchor": "SLIMetricSource",
       "properties": {
         "metricSourceRef": {
-          "type": "string"
+          "type": "string",
+          "description": "MetricSourceRef names an existing [DataSource]."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "Type identifies the implementation-defined metric-source type.\nWhen [SLIMetricSource.MetricSourceRef] is set, OpenSLO infers Type from the referenced [DataSource]."
         },
         "spec": {
-          "type": "object"
+          "type": "object",
+          "description": "Spec contains source-specific query or metric-retrieval configuration."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "spec"
-      ]
+      ],
+      "description": "SLIMetricSource identifies a metrics backend and supplies the configuration needed to retrieve a metric."
     },
     "SLIMetricSpec": {
       "$anchor": "SLIMetricSpec",
@@ -81,51 +92,62 @@
       "type": "object",
       "required": [
         "metricSource"
-      ]
+      ],
+      "description": "SLIMetricSpec defines one query used to read metric data for an SLI."
     },
     "SLIRatioMetric": {
       "$anchor": "SLIRatioMetric",
       "properties": {
         "counter": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Counter reports whether the queried good, bad, and total metrics are monotonically increasing.\nIt has no effect when Raw is used."
         },
         "good": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Good supplies the numerator for a good-over-total ratio."
         },
         "bad": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Bad supplies the number subtracted from Total for a failure-based ratio."
         },
         "total": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Total supplies the denominator for a Good- or Bad-based ratio."
         },
         "rawType": {
-          "type": "string"
+          "type": "string",
+          "description": "RawType selects whether Raw is interpreted as a success or failure ratio when Raw is used."
         },
         "raw": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Raw defines a query for a precomputed success or failure ratio."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "counter"
-      ]
+      ],
+      "description": "SLIRatioMetric defines an indicator from good divided by total or (total minus bad) divided by total."
     },
     "SLISpec": {
       "$anchor": "SLISpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the SLI."
         },
         "thresholdMetric": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "ThresholdMetric defines a query that returns raw values.\n[SLOObjective.Operator] compares each value with [SLOObjective.Value]."
         },
         "ratioMetric": {
           "$ref": "#/$defs/SLIRatioMetric"
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLISpec defines the query or queries used to calculate an SLI."
     }
   },
   "properties": {
@@ -149,5 +171,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "SLI defines a derived reliability indicator and the queries used to calculate it for an SLO."
 }

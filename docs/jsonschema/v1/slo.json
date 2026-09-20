@@ -7,7 +7,8 @@
       "additionalProperties": {
         "type": "string"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Annotations maps metadata keys to implementation- or system-specific values."
     },
     "DurationShorthand": {
       "type": "string",
@@ -32,48 +33,58 @@
       "additionalProperties": {
         "$ref": "#/$defs/Label"
       },
-      "type": "object"
+      "type": "object",
+      "description": "Labels maps each metadata key to a set of values."
     },
     "Metadata": {
       "$anchor": "Metadata",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Name identifies the object."
         },
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is the object's human-readable name."
         },
         "labels": {
-          "$ref": "#/$defs/Labels"
+          "$ref": "#/$defs/Labels",
+          "description": "Labels contains metadata associated with the object."
         },
         "annotations": {
-          "$ref": "#/$defs/Annotations"
+          "$ref": "#/$defs/Annotations",
+          "description": "Annotations contains implementation- or system-specific metadata."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "name"
-      ]
+      ],
+      "description": "Metadata identifies and describes an OpenSLO v1 object."
     },
     "SLIMetricSource": {
       "$anchor": "SLIMetricSource",
       "properties": {
         "metricSourceRef": {
-          "type": "string"
+          "type": "string",
+          "description": "MetricSourceRef names an existing [DataSource]."
         },
         "type": {
-          "type": "string"
+          "type": "string",
+          "description": "Type identifies the implementation-defined metric-source type.\nWhen [SLIMetricSource.MetricSourceRef] is set, OpenSLO infers Type from the referenced [DataSource]."
         },
         "spec": {
-          "type": "object"
+          "type": "object",
+          "description": "Spec contains source-specific query or metric-retrieval configuration."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "spec"
-      ]
+      ],
+      "description": "SLIMetricSource identifies a metrics backend and supplies the configuration needed to retrieve a metric."
     },
     "SLIMetricSpec": {
       "$anchor": "SLIMetricSpec",
@@ -86,51 +97,62 @@
       "type": "object",
       "required": [
         "metricSource"
-      ]
+      ],
+      "description": "SLIMetricSpec defines one query used to read metric data for an SLI."
     },
     "SLIRatioMetric": {
       "$anchor": "SLIRatioMetric",
       "properties": {
         "counter": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Counter reports whether the queried good, bad, and total metrics are monotonically increasing.\nIt has no effect when Raw is used."
         },
         "good": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Good supplies the numerator for a good-over-total ratio."
         },
         "bad": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Bad supplies the number subtracted from Total for a failure-based ratio."
         },
         "total": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Total supplies the denominator for a Good- or Bad-based ratio."
         },
         "rawType": {
-          "type": "string"
+          "type": "string",
+          "description": "RawType selects whether Raw is interpreted as a success or failure ratio when Raw is used."
         },
         "raw": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "Raw defines a query for a precomputed success or failure ratio."
         }
       },
       "additionalProperties": false,
       "type": "object",
       "required": [
         "counter"
-      ]
+      ],
+      "description": "SLIRatioMetric defines an indicator from good divided by total or (total minus bad) divided by total."
     },
     "SLISpec": {
       "$anchor": "SLISpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the SLI."
         },
         "thresholdMetric": {
-          "$ref": "#/$defs/SLIMetricSpec"
+          "$ref": "#/$defs/SLIMetricSpec",
+          "description": "ThresholdMetric defines a query that returns raw values.\n[SLOObjective.Operator] compares each value with [SLOObjective.Value]."
         },
         "ratioMetric": {
           "$ref": "#/$defs/SLIRatioMetric"
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLISpec defines the query or queries used to calculate an SLI."
     },
     "SLOAlertPolicy": {
       "oneOf": [
@@ -173,10 +195,12 @@
       "$anchor": "SLOCalendar",
       "properties": {
         "startTime": {
-          "type": "string"
+          "type": "string",
+          "description": "StartTime anchors the first calendar window."
         },
         "timeZone": {
-          "type": "string"
+          "type": "string",
+          "description": "TimeZone controls the interpretation of StartTime and later boundaries."
         }
       },
       "additionalProperties": false,
@@ -184,7 +208,8 @@
       "required": [
         "startTime",
         "timeZone"
-      ]
+      ],
+      "description": "SLOCalendar anchors a calendar-aligned SLOTimeWindow in a time zone."
     },
     "SLOIndicatorInline": {
       "$anchor": "SLOIndicatorInline",
@@ -201,80 +226,100 @@
       "required": [
         "metadata",
         "spec"
-      ]
+      ],
+      "description": "SLOIndicatorInline embeds an SLI in an SLOSpec or SLOObjective."
     },
     "SLOObjective": {
       "$anchor": "SLOObjective",
       "properties": {
         "displayName": {
-          "type": "string"
+          "type": "string",
+          "description": "DisplayName is the objective's human-readable name."
         },
         "op": {
-          "type": "string"
+          "type": "string",
+          "description": "Operator compares threshold-metric samples with Value."
         },
         "value": {
-          "type": "number"
+          "type": "number",
+          "description": "Value sets the threshold for metric sample comparisons.\nIt is distinct from the success target expressed by Target or TargetPercent."
         },
         "target": {
-          "type": "number"
+          "type": "number",
+          "description": "Target expresses the success target as a fraction."
         },
         "targetPercent": {
-          "type": "number"
+          "type": "number",
+          "description": "TargetPercent expresses the success target as a percentage."
         },
         "timeSliceTarget": {
-          "type": "number"
+          "type": "number",
+          "description": "TimeSliceTarget classifies a slice as good when BudgetingMethod is [SLOBudgetingMethodTimeslices]."
         },
         "timeSliceWindow": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "TimeSliceWindow sets the slice size and query interval.\nIt applies to [SLOBudgetingMethodTimeslices] and [SLOBudgetingMethodRatioTimeslices].\nThis Go model supports [DurationShorthand] only.\nOpenSLO also permits a number, which it interprets as minutes."
         },
         "indicator": {
-          "$ref": "#/$defs/SLOIndicatorInline"
+          "$ref": "#/$defs/SLOIndicatorInline",
+          "description": "Indicator defines this objective's SLI inline for a composite SLO."
         },
         "indicatorRef": {
-          "type": "string"
+          "type": "string",
+          "description": "IndicatorRef names this objective's [SLI] for a composite SLO."
         },
         "compositeWeight": {
-          "type": "number"
+          "type": "number",
+          "description": "CompositeWeight scales this objective's contribution to a composite SLO.\nOpenSLO defaults it to 1, but this SDK preserves an omitted value as nil."
         }
       },
       "additionalProperties": false,
-      "type": "object"
+      "type": "object",
+      "description": "SLOObjective defines a success target and, when applicable, a threshold comparison or composite-specific indicator."
     },
     "SLOSpec": {
       "$anchor": "SLOSpec",
       "properties": {
         "description": {
-          "type": "string"
+          "type": "string",
+          "description": "Description summarizes the SLO."
         },
         "service": {
-          "type": "string"
+          "type": "string",
+          "description": "Service names the associated service.\nConsumers define how to resolve the name to a [Service]."
         },
         "indicator": {
-          "$ref": "#/$defs/SLOIndicatorInline"
+          "$ref": "#/$defs/SLOIndicatorInline",
+          "description": "Indicator defines a standard SLO's SLI inline.\nComposite SLOs place indicators on individual Objectives."
         },
         "indicatorRef": {
-          "type": "string"
+          "type": "string",
+          "description": "IndicatorRef names an existing [SLI] for a standard SLO.\nComposite SLOs place indicator references on individual Objectives."
         },
         "budgetingMethod": {
-          "type": "string"
+          "type": "string",
+          "description": "BudgetingMethod applies the selected error-budget calculation to every objective."
         },
         "timeWindow": {
           "items": {
             "$ref": "#/$defs/SLOTimeWindow"
           },
-          "type": "array"
+          "type": "array",
+          "description": "TimeWindow defines the period over which the SLO is evaluated."
         },
         "objectives": {
           "items": {
             "$ref": "#/$defs/SLOObjective"
           },
-          "type": "array"
+          "type": "array",
+          "description": "Objectives contains the SLO's target definitions."
         },
         "alertPolicies": {
           "items": {
             "$ref": "#/$defs/SLOAlertPolicy"
           },
-          "type": "array"
+          "type": "array",
+          "description": "AlertPolicies contains inline alert policies or references to existing [AlertPolicy] objects."
         }
       },
       "additionalProperties": false,
@@ -283,19 +328,23 @@
         "service",
         "budgetingMethod",
         "objectives"
-      ]
+      ],
+      "description": "SLOSpec defines the service association, indicator placement, budgeting method, evaluation window, objectives, and alert policies of an SLO."
     },
     "SLOTimeWindow": {
       "$anchor": "SLOTimeWindow",
       "properties": {
         "duration": {
-          "$ref": "#/$defs/DurationShorthand"
+          "$ref": "#/$defs/DurationShorthand",
+          "description": "Duration is the length of the evaluation window."
         },
         "isRolling": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "IsRolling selects a rolling window when true and a calendar-aligned window when false."
         },
         "calendar": {
-          "$ref": "#/$defs/SLOCalendar"
+          "$ref": "#/$defs/SLOCalendar",
+          "description": "Calendar defines the alignment of a calendar window."
         }
       },
       "additionalProperties": false,
@@ -303,7 +352,8 @@
       "required": [
         "duration",
         "isRolling"
-      ]
+      ],
+      "description": "SLOTimeWindow defines one rolling or calendar-aligned evaluation window."
     }
   },
   "properties": {
@@ -327,5 +377,6 @@
     "kind",
     "metadata",
     "spec"
-  ]
+  ],
+  "description": "SLO represents a target value or range for a service level measured by an SLI."
 }
